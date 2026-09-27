@@ -812,7 +812,13 @@ h3{font-size:1.05rem;font-weight:700;margin-bottom:7px}
   transition:all .35s;
 }
 .qCard-pill.quantum{background:rgba(69,227,255,.15);color:var(--cyan);border-color:rgba(69,227,255,.45)}
-.qCard-code{text-align:left;margin-bottom:16px}
+.qCard-code{text-align:left;margin-bottom:16px;transition:box-shadow .3s,border-color .3s}
+.qCard-code.active{border-color:var(--gold);box-shadow:0 0 0 1px rgba(245,196,81,.3),0 0 20px rgba(245,196,81,.22)}
+.qCard-code.quantum.active{border-color:var(--cyan);box-shadow:0 0 0 1px rgba(69,227,255,.3),0 0 20px rgba(69,227,255,.25)}
+.qCard-wall{margin:14px auto 6px}
+.qCard-wallLine{color:var(--txt-3);font-size:.82rem;text-align:center;min-height:1.3em;margin:0 0 10px}
+.qCard-authentic{font-size:.8rem;font-style:italic;color:var(--txt-3);text-align:left;margin:-8px 0 14px;line-height:1.5}
+.qCard .note{text-align:left;margin:0 0 14px}
 .qCard-callout{
   display:flex;gap:10px;align-items:flex-start;text-align:left;margin-bottom:18px;padding:13px 15px;
   background:rgba(61,255,168,.09);border:1px solid rgba(61,255,168,.32);border-radius:12px;
@@ -1095,6 +1101,11 @@ body.realm-visual .btn.ghost{border-color:rgba(69,227,255,.28)}
 .note b{color:var(--gold)}
 .note.c{background:rgba(69,227,255,.07);border-color:rgba(69,227,255,.28)}
 .note.c b{color:var(--cyan)}
+.note.warn{background:rgba(255,162,61,.09);border-color:rgba(255,162,61,.35)}
+.note.warn b{color:var(--warn)}
+.note.gloss{background:rgba(139,123,255,.09);border-color:rgba(139,123,255,.32)}
+.note.gloss b{color:var(--violet)}
+.note.gloss i{color:var(--violet);font-style:normal}
 details.more{margin:12px 0;border-top:1px solid var(--edge);padding-top:9px}
 details.more>summary{cursor:pointer;list-style:none;font-family:var(--fm);font-weight:700;font-size:.66rem;letter-spacing:.14em;color:var(--txt-3)}
 details.more>summary::-webkit-details-marker{display:none}
@@ -1335,6 +1346,9 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
         will hold." </p>
         <p>"You did four jobs tonight, by hand. I want to show you what the <b>same</b> four jobs look like
         the day someone hands them to a quantum machine instead. Quick look. No lecture."</p>
+        <p>"One thing first — the code I'll show you is real. Shor's algorithm, Grover's algorithm, genuinely.
+        I've written it in plain English instead of the maths and circuit diagrams a physicist would use, but
+        every step does what it says it does. Nothing here is decoration."</p>
       </div>
       <button class="btn qred" id="qIntroNext" type="button" style="width:auto;height:auto;border-radius:100px;padding:13px 26px;animation:none;box-shadow:0 10px 26px rgba(226,29,42,.35)">Show me →</button>
     </div>
@@ -1344,9 +1358,17 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
       <div class="qCard-image" id="qCardImage">🔐</div>
       <div class="qCard-pill" id="qCardPill">CLASSICAL — BRUTE-FORCE LOOP</div>
       <div class="code qCard-code" id="qCardCode"></div>
+      <div class="qCard-authentic" id="qCardAuthentic" style="display:none"></div>
+      <div class="wall qCard-wall" id="qCardWall"></div>
+      <div class="qCard-wallLine" id="qCardWallLine">&nbsp;</div>
+      <div class="note gloss" id="qCardGloss" style="display:none"></div>
       <div class="qCard-callout" id="qCardCallout" style="display:none"></div>
+      <div class="note c" id="qCardWow" style="display:none"></div>
+      <div class="note" id="qCardScale" style="display:none"></div>
+      <div class="note warn" id="qCardCaution" style="display:none"></div>
       <div class="row">
-        <button class="btn qred" id="qCardBtn" type="button" style="width:auto;height:auto;border-radius:100px;padding:13px 22px;animation:none;box-shadow:0 10px 26px rgba(226,29,42,.35)">⚛ Press the quantum button</button>
+        <button class="btn qred" id="qCardBtn" type="button" style="display:none;width:auto;height:auto;border-radius:100px;padding:13px 22px;animation:none;box-shadow:0 10px 26px rgba(226,29,42,.35)">⚛ Convert to quantum</button>
+        <button class="btn q" id="qCardRunQ" type="button" style="display:none">▶ Run the quantum code</button>
         <button class="btn gold" id="qCardNext" type="button" style="display:none">Next →</button>
       </div>
     </div>
@@ -1355,6 +1377,22 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
       <div class="qCard-eyebrow">THAT'S THE TASTE</div>
       <h2>Four jobs. Four quantum tricks.</h2>
       <div class="qSumGrid" id="qSumGrid"></div>
+
+      <h3 style="margin-top:8px">Why any of this actually matters</h3>
+      <div class="note c"><b>Why it's genuinely cool:</b> Grover's and Shor's algorithms aren't hype — they're
+      two of a small handful of quantum algorithms with a real, provable mathematical speed advantage over any
+      classical computer, at any size. Nobody has built a machine fast enough to use them at real-world scale.
+      That's the entire gap between what you just saw and reality.</div>
+      <div class="note"><b>Jobs, in time:</b> nobody is hiring "quantum programmers" at scale yet &mdash; the
+      machines aren't there. But the run-up already is: quantum algorithm research roles exist today, security
+      teams are re-architecting encryption years early, and reading a classical-vs-quantum trade-off is
+      becoming a real skill in finance and tech. Most estimates put the machines that matter 10&ndash;20 years
+      out &mdash; which means understanding this now is a head start, not a party trick.</div>
+      <div class="note warn"><b>The one to actually worry about:</b> "store now, decrypt later." Data encrypted
+      today can be captured and kept, unreadable, until a quantum computer able to run Shor's algorithm exists
+      to unlock it. That's why banks and governments are already switching to quantum-safe encryption, years
+      before the machines that would justify the panic.</div>
+
       <p class="lede">None of this ran on a real quantum computer tonight — the maths is real, a machine
       fast enough to beat a laptop at it isn't. Not yet.</p>
       <button class="btn gold" id="qSummaryDone" type="button">Back to reality →</button>
@@ -2557,13 +2595,17 @@ function qStaticBurst(){
     src.start();
   } catch(e){}
 }
-function qDissolve(){
+/* qStaticTransition(onDone, duration) — the same white-noise burst used three
+   times now: reality dissolving in, the cut between each scenario, and the
+   cut back to reality at the end. One function, three call sites, so all
+   three always look and sound identical. */
+function qStaticTransition(onDone, duration){
   document.body.style.overflow = 'hidden';
   const cv = $('#qStatic'), g = cv.getContext('2d');
   cv.width = innerWidth; cv.height = innerHeight;
   cv.classList.add('on');
   qStaticBurst();
-  const start = performance.now(), total = 900;
+  const start = performance.now(), total = duration || 900;
   function frame(t){
     const el = t - start;
     const img = g.createImageData(cv.width, cv.height);
@@ -2581,14 +2623,23 @@ function qDissolve(){
       g.fillRect(0, Math.random() * cv.height, cv.width, 2 + Math.random() * 10);
     }
     if (el < total){ requestAnimationFrame(frame); }
-    else { cv.classList.remove('on'); document.body.style.overflow = ''; qOpenVeil(); }
+    else { cv.classList.remove('on'); document.body.style.overflow = ''; onDone(); }
   }
   requestAnimationFrame(frame);
 }
+function qDissolve(){ qStaticTransition(qOpenVeil, 900); }
 
-/* ── the four scenarios, reusing the heist's real quantum content ── */
+/* ── the four scenarios, reusing the heist's real quantum content ──
+   Each one now runs for real rather than just showing two code panels:
+   the classical version plays out on a wall of boxes, one at a time
+   (runClassicWall — the same function the Quantum Playground uses),
+   then converting to quantum visibly rewrites the code, and running
+   the quantum version lights up every box at once and collapses straight
+   to the answer (runQuantumWall). n/cols/emoji drive that wall; wow is
+   the "why this actually matters" beat; caution (outer door only) is the
+   store-now-decrypt-later warning. */
 const QTASTE = [
-  { tag:'THE OUTER DOOR', img:'🔐',
+  { tag:'THE OUTER DOOR', img:'🔐', n:26, cols:13, emoji:'🔓', verb:'trying shift',
     cPill:'CLASSICAL — BRUTE-FORCE LOOP',
     cCode:`<span class="var">shift</span> <span class="kw">=</span> <span class="num">1</span><br>
       <span class="kw">until</span> <span class="var">it_is_a_word</span><span class="kw">:</span><br>
@@ -2599,16 +2650,30 @@ const QTASTE = [
       <span class="kw">repeat until</span> <span class="var">the_pattern_repeats</span><span class="kw">:</span><br>
       <span class="ind"><span class="var">x</span> <span class="kw">=</span> (<span class="var">x</span> <span class="kw">*</span> <span class="num">3</span>) <span class="kw">mod</span> <span class="var">N</span></span>
       <span class="fn">factor</span>(<span class="var">N</span>, <span class="var">period</span>)`,
-    callout:'26 shifts, tried one at a time by hand. A real key is hundreds of digits long — a quantum computer finds the hidden repeating pattern almost instantly, and the two numbers just fall out.' },
-  { tag:'ROOM ONE', img:'📦',
+    qNote:'Genuinely Shor\'s algorithm, not a dramatisation: finding that repeating pattern (the "period") really is the hard part classical computers choke on, and factor() at the end really is just honest arithmetic once you have it.',
+    glossary:'<b>New words, plain English:</b><br>'
+      + '<i>mod</i> &mdash; what\'s left over after dividing, wrapping round like a clock: 15 mod 12 is 3, the same way 15 o\'clock wraps round to 3 o\'clock.<br>'
+      + '<i>period</i> &mdash; how many steps it takes before the remainders start repeating in the same order, like timing one full lap of a running track. Once you know the lap length, splitting the number into its two factors is just arithmetic.',
+    result:'26 shifts, tried one at a time by hand. A real key is hundreds of digits long — a quantum computer finds the hidden repeating pattern in one pass, and the two numbers just fall out.',
+    wow:'<b>Why this one matters most:</b> real encryption — the kind protecting card payments and online banking — relies on exactly this being too slow to brute-force, even for every computer on Earth combined, working together, for longer than the universe has existed. Shor\'s algorithm, run on a big enough quantum computer, breaks that assumption.',
+    scale:'<b>At real-world scale:</b> a real encryption key isn\'t 26 digits — it\'s built from numbers hundreds of digits long. Trying shifts by hand, or with every computer on Earth working together, would take far longer than the universe has existed. Some estimates put a large enough, fully error-corrected quantum computer at hours to days for that same key &mdash; nobody has built one that big yet, but that estimate is exactly what the "harvest now, decrypt later" worry below is based on.',
+    caution:'<b>The catch:</b> nobody needs a working quantum computer today to start the damage. Encrypted data can be captured and stored right now, then unlocked the moment one exists &mdash; "harvest now, decrypt later." It\'s why banks are already switching to post-quantum encryption, years ahead of the machines that would need it.' },
+  { tag:'ROOM ONE', img:'📦', n:4, cols:4, emoji:'🔑', verb:'checking box',
     cPill:'CLASSICAL — LINEAR SEARCH',
     cCode:`<span class="kw">for</span> <span class="var">box</span> <span class="kw">in</span> <span class="var">boxes</span><span class="kw">:</span><br>
       <span class="ind"><span class="kw">if</span> <span class="var">box</span> <span class="kw">==</span> <span class="var">key</span><span class="kw">:</span> <span class="fn">stop</span>()</span>`,
     qPill:"QUANTUM — GROVER'S ALGORITHM",
     qCode:`<span class="kw">all_boxes</span>.<span class="fn">spin</span>()<br>
       <span class="fn">mark</span>()<br><span class="fn">boost</span>()<br><span class="fn">look</span>()`,
-    callout:'Four boxes, up to four opens by hand. One tuned Mark + Boost step, and the odds hit 100%.' },
-  { tag:'ROOMS TWO & THREE', img:'🔂',
+    qNote:'Genuinely Grover\'s algorithm: spin, mark, boost and look are the real four moves, just given plain-English names instead of the circuit diagrams a physicist would draw them as.',
+    glossary:'<b>New words, plain English:</b><br>'
+      + '<i>spin()</i> &mdash; puts every box into a blend of "maybe open, maybe not" at once, instead of picking one to check &mdash; like flipping every coin in the room at the same instant, before any of them has landed.<br>'
+      + '<i>mark() + boost()</i> &mdash; quietly tags the right box, then nudges its odds up a little (and everyone else\'s down) &mdash; like one voice in a stadium getting picked out and amplified through the speakers while the rest of the crowd fades.<br>'
+      + '<i>look()</i> &mdash; the one step that actually opens a box and gives you a real answer. Do it too early, before mark/boost have done their work, and it\'s no better than a guess.',
+    result:'Four boxes, up to four opens by hand. One tuned Mark + Boost step, and the odds hit 100%.',
+    wow:'<b>Why it matters:</b> search is one of the few problems quantum computers are provably faster at, whatever the size of the pile — not just code-breaking. Any "find the one thing in a huge unsorted mess" problem gets this same speed-up, from medical records to logistics to training data.',
+    scale:'<b>At real-world scale:</b> four boxes is too small to feel any difference &mdash; both approaches finish in a blink. Scale the pile up to a million unsorted records and checking them one at a time, at a steady one per second, averages about six days of non-stop searching. Grover\'s algorithm needs roughly 1,000 tuned steps for that same million &mdash; over in seconds.' },
+  { tag:'ROOMS TWO & THREE', img:'🔂', n:64, cols:8, emoji:'🔑', verb:'checking box',
     cPill:'CLASSICAL — COUNTED LOOP',
     cCode:`<span class="kw">repeat</span> <span class="num">64</span> <span class="kw">times:</span><br>
       <span class="ind"><span class="fn">check</span>(<span class="var">next_box</span>)</span>`,
@@ -2616,8 +2681,14 @@ const QTASTE = [
     qCode:`<span class="kw">repeat</span> <span class="num">6</span> <span class="kw">times:</span><br>
       <span class="ind"><span class="fn">mark</span>(); <span class="fn">boost</span>()</span>
       <span class="fn">look</span>()`,
-    callout:'64 boxes by hand, one at a time. 6 tuned steps by quantum — and the gap only gets wider as the pile gets bigger.' },
-  { tag:'THE LEDGER', img:'🔀',
+    qNote:'Same real algorithm as Room One &mdash; Grover\'s &mdash; just repeated more times because there\'s more to search. The moves don\'t change; only how many times you run them does.',
+    glossary:'<b>New words, plain English:</b><br>'
+      + '<i>boost()</i> &mdash; each pass nudges the right box\'s odds up a little further, like turning a dial a few clicks at a time until it\'s almost certainly landing on the answer.<br>'
+      + '<i>why 6, not 64</i> &mdash; the number of repeats you need grows with the <b>square root</b> of the pile, not the pile itself. Quadruple the boxes (16 &rarr; 64) and you only need about double the steps (3 &rarr; 6).',
+    result:'64 boxes by hand, one at a time. 6 tuned steps by quantum.',
+    wow:'<b>Why it matters:</b> sixteen boxes (room two) needs 3 quantum steps; sixty-four (room three) needs 6 &mdash; that\'s only double the steps for sixteen times the boxes. That gap between "a few more steps" and "the whole pile, checked by hand" keeps widening as the pile grows: a million records would still only take about a thousand steps, not a million.',
+    scale:'<b>At real-world scale:</b> scale the pile up to sixteen million &mdash; a national archive, say &mdash; and checking one at a time averages about three months of non-stop searching. Quantum keeps pace with the square root of the pile: roughly 4,000 tuned steps, still done in seconds.' },
+  { tag:'THE LEDGER', img:'🔀', n:64, cols:8, emoji:'🚩', verb:'reading account',
     cPill:'CLASSICAL — CONDITIONAL SCAN',
     cCode:`<span class="kw">for</span> <span class="var">account</span> <span class="kw">in</span> <span class="var">ledger</span><span class="kw">:</span><br>
       <span class="ind"><span class="kw">if</span> <span class="var">amount</span> <span class="kw">&gt;</span> <span class="num">10000</span> <span class="kw">and</span> <span class="var">country</span> <span class="kw">!=</span> <span class="str">"UK"</span><span class="kw">:</span></span>
@@ -2627,9 +2698,15 @@ const QTASTE = [
       <span class="kw">repeat</span> <span class="num">6</span> <span class="kw">times:</span><br>
       <span class="ind"><span class="fn">mark</span>(<span class="var">oracle</span>); <span class="fn">boost</span>()</span>
       <span class="fn">look</span>()`,
-    callout:"64 accounts read by hand, in order. The same rule, handed to a quantum machine: 6 steps. You didn't rewrite it — you just handed it to a different machine." },
+    qNote:'Genuinely the same Grover\'s algorithm a third time &mdash; the only thing that changes is what oracle() is built to recognise. Here, it\'s your own if-rule from the Ledger, not a fixed box.',
+    glossary:'<b>New words, plain English:</b><br>'
+      + '<i>oracle</i> &mdash; a black-box rule that quietly says "yes" or "no" to each account without revealing how it decided, like a bouncer with a checklist who won\'t show you the list.<br>'
+      + '<i>oracle = your_if_rule</i> &mdash; this isn\'t a new rule written for the quantum machine. It\'s the exact same <code>amount &gt; 10000 and country != "UK"</code> check you already wrote, just handed to a different kind of computer to run.',
+    result:"64 accounts read by hand, in order. The same rule, handed to a quantum machine: 6 steps.",
+    wow:"<b>Why it matters:</b> you didn't rewrite the rule for the quantum machine &mdash; you handed the exact same if-statement to a different kind of computer. That's the realistic way this actually arrives at a bank: not new code from scratch, existing logic pointed at new hardware.",
+    scale:'<b>At real-world scale:</b> a real bank\'s ledger might hold ten million transactions a year. Scanning them one at a time, at hand-speed rules, one per second, averages close to two months of non-stop checking. The same if-rule as an oracle, handed to a quantum machine: about 3,160 tuned steps &mdash; a few seconds, whatever the ledger\'s real size.' },
 ];
-let qIdx = 0;
+let qIdx = 0, qTarget = 0;
 
 function qOpenVeil(){
   $('#qVeil').classList.add('on');
@@ -2638,46 +2715,101 @@ function qOpenVeil(){
   $('#qSummary').style.display = 'none';
   window.scrollTo({top:0});
 }
+/* a neutral, unopened wall — shown the instant a scenario appears, before
+   either run has happened, so the player sees the size of the pile first */
+function qBuildIdleWall(n, cols){
+  const w = $('#qCardWall');
+  w.style.gridTemplateColumns = `repeat(${cols},1fr)`;
+  w.style.maxWidth = realmWallWidth(cols) + 'px';
+  w.style.gap = realmGap(cols) + 'px';
+  w.innerHTML = '';
+  const frag = document.createDocumentFragment();
+  for (let i = 0; i < n; i++){
+    const b = document.createElement('div');
+    b.className = 'bx'; b.style.setProperty('--i', i);
+    frag.appendChild(b);
+  }
+  w.appendChild(frag);
+}
 function qShowScenario(i){
   qIdx = i;
   const s = QTASTE[i];
+  qTarget = Math.floor(Math.random() * s.n);
   $('#qIntro').style.display = 'none';
   $('#qSummary').style.display = 'none';
   const card = $('#qCard');
   card.style.display = 'block';
   $('#qCardEyebrow').textContent = `SCENARIO ${i+1} OF ${QTASTE.length} · ${s.tag}`;
-  const imgEl = $('#qCardImage'), pillEl = $('#qCardPill');
+  const imgEl = $('#qCardImage'), pillEl = $('#qCardPill'), codeEl = $('#qCardCode');
   imgEl.className = 'qCard-image'; imgEl.textContent = s.img;
   pillEl.className = 'qCard-pill'; pillEl.textContent = s.cPill;
-  $('#qCardCode').innerHTML = s.cCode;
+  codeEl.className = 'code qCard-code'; codeEl.innerHTML = s.cCode;
+  qBuildIdleWall(s.n, s.cols);
+  $('#qCardWallLine').innerHTML = '&nbsp;';
+  $('#qCardAuthentic').style.display = 'none';
+  $('#qCardGloss').style.display = 'none';
   $('#qCardCallout').style.display = 'none';
-  $('#qCardBtn').style.display = 'inline-block';
+  $('#qCardWow').style.display = 'none';
+  $('#qCardScale').style.display = 'none';
+  $('#qCardCaution').style.display = 'none';
+  $('#qCardBtn').style.display = 'none';
+  $('#qCardRunQ').style.display = 'none';
   $('#qCardNext').style.display = 'none';
-  card.dataset.gone = '';
+  card.dataset.stage = 'classical';
   window.scrollTo({top:0});
+  // a beat to actually read the classical code, then it runs itself —
+  // the player didn't ask to press a button to watch the "before" half,
+  // only for the option to run the quantum "after" half
+  setTimeout(() => { if (card.dataset.stage === 'classical') qRunClassical(); }, 900);
+}
+async function qRunClassical(){
+  const s = QTASTE[qIdx];
+  await runClassicWall(s.n, s.cols, qTarget, {wall:$('#qCardWall'), line:$('#qCardWallLine'), code:$('#qCardCode')}, s.verb, s.emoji);
+  $('#qCardBtn').style.display = 'inline-block';
 }
 function qGoQuantum(){
   const card = $('#qCard'), s = QTASTE[qIdx];
-  if (card.dataset.gone) return;
-  card.dataset.gone = '1';
+  if (card.dataset.stage !== 'classical') return;
+  card.dataset.stage = 'converting';
   card.classList.remove('melting'); void card.offsetWidth; card.classList.add('melting');
+  $('#qCardBtn').style.display = 'none';
   sfx.forward();
   setTimeout(() => {
     $('#qCardImage').classList.add('quantum');
     $('#qCardPill').classList.add('quantum'); $('#qCardPill').textContent = s.qPill;
-    $('#qCardCode').innerHTML = s.qCode;
+    $('#qCardCode').classList.add('quantum'); $('#qCardCode').innerHTML = s.qCode;
+    qBuildIdleWall(s.n, s.cols);
+    $('#qCardWallLine').innerHTML = '&nbsp;';
   }, 340);
   setTimeout(() => {
     card.classList.remove('melting');
-    $('#qCardCallout').innerHTML = `<span class="ic">💡</span><span>${s.callout}</span>`;
-    $('#qCardCallout').style.display = 'flex';
-    $('#qCardBtn').style.display = 'none';
-    $('#qCardNext').style.display = 'inline-block';
+    card.dataset.stage = 'quantum-ready';
+    if (s.qNote){ $('#qCardAuthentic').innerHTML = '⚛ ' + s.qNote; $('#qCardAuthentic').style.display = 'block'; }
+    if (s.glossary){ $('#qCardGloss').innerHTML = s.glossary; $('#qCardGloss').style.display = 'block'; }
+    $('#qCardRunQ').style.display = 'inline-block';
   }, 760);
 }
+async function qRunQuantum(){
+  const card = $('#qCard'), s = QTASTE[qIdx];
+  if (card.dataset.stage !== 'quantum-ready') return;
+  card.dataset.stage = 'quantum-running';
+  $('#qCardRunQ').style.display = 'none';
+  const k = bestK(s.n), p = conf(s.n, k);
+  await runQuantumWall(s.n, s.cols, k, p, qTarget, {wall:$('#qCardWall'), line:$('#qCardWallLine'), code:$('#qCardCode')}, s.emoji);
+  $('#qCardCallout').innerHTML = `<span class="ic">💡</span><span>${s.result}</span>`;
+  $('#qCardCallout').style.display = 'flex';
+  $('#qCardWow').innerHTML = s.wow;
+  $('#qCardWow').style.display = 'block';
+  if (s.scale){ $('#qCardScale').innerHTML = s.scale; $('#qCardScale').style.display = 'block'; }
+  if (s.caution){ $('#qCardCaution').innerHTML = s.caution; $('#qCardCaution').style.display = 'block'; }
+  $('#qCardNext').style.display = 'inline-block';
+  card.dataset.stage = 'done';
+}
 function qNext(){
-  if (qIdx < QTASTE.length - 1) qShowScenario(qIdx + 1);
-  else qShowSummary();
+  qStaticTransition(() => {
+    if (qIdx < QTASTE.length - 1) qShowScenario(qIdx + 1);
+    else qShowSummary();
+  }, 650);
 }
 function qShowSummary(){
   $('#qCard').style.display = 'none';
@@ -2691,9 +2823,10 @@ function qShowSummary(){
 }
 $('#qIntroNext')?.addEventListener('click', () => qShowScenario(0));
 $('#qCardBtn')?.addEventListener('click', qGoQuantum);
+$('#qCardRunQ')?.addEventListener('click', qRunQuantum);
 $('#qCardNext')?.addEventListener('click', qNext);
 $('#qSummaryDone')?.addEventListener('click', () => {
-  $('#qVeil').classList.remove('on');
+  qStaticTransition(() => { $('#qVeil').classList.remove('on'); }, 900);
 });
 
 /* ── scenes ─────────────────────────────────────── */
